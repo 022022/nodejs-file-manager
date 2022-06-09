@@ -2,15 +2,16 @@
   "name": "nodejs-file-manager",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/022022/nodejs-file-manager.git"
   },
-  "author": "",
+  "author": "022022",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/022022/nodejs-file-manager/issues"
