@@ -8,7 +8,7 @@ export function add(newFileName){
                                 console.log('File '+ newFileName + ' was created.'+ '\n' + 'You are currently in ' + process.cwd());
                                 });
   } catch(err) {
-    console.log(err+'Operation failed.'+ '\n' + 'You are currently in ' + process.cwd());
+    console.log('Operation failed.'+ '\n' + 'You are currently in ' + process.cwd());
   }
 
 }

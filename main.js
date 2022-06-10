@@ -9,6 +9,7 @@ import { ls } from './ls.js';
 import { cat } from './cat.js';
 import { os } from './os.js';
 import { add } from './add.js';
+import { rn } from './rn.js';
 import { cd, up } from './move.js';
 
 
@@ -22,7 +23,7 @@ export function setNewPath(path){
     chdir(pathToWorkingDirectory);
     console.log('You are currently in ' + process.cwd());
   } catch (err) {
-    console.log('Operation failed. You are currently in ' + process.cwd());
+    console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd());
   }
 }
 
@@ -57,8 +58,8 @@ function route(command){
   else if(command.startsWith('cd ')) cd(command.slice(3), pathToWorkingDirectory);
 
   else if(command.startsWith('cat ')) cat(command.slice(4)); // Read file and print it's content in console
-  else if(command.startsWith('add ')) add(command.slice(4)); //Create empty file in current working directory
-  else if(command.startsWith('rn ')) console.log(command);
+  else if(command.startsWith('add ')) add(command.slice(4)); // Create empty file in current working directory
+  else if(command.startsWith('rn ')) rn(command.slice(3)); // Rename file: rn path_to_file new_filename
   else if(command.startsWith('cp ')) console.log(command);
   else if(command.startsWith('mv ')) console.log(command);
   else if(command.startsWith('rm ')) console.log(command);
