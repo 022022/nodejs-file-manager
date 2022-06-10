@@ -10,7 +10,11 @@ import { cat } from './cat.js';
 import { os } from './os.js';
 import { add } from './add.js';
 import { rn } from './rn.js';
-import { cd, up } from './move.js';
+import { copy } from './cp.js';
+import { mv } from './mv.js';
+import { del } from './del.js';
+import { cd, up } from './navigate.js';
+
 
 
 const { stdout, stdin, chdir, argv } = process;
@@ -59,10 +63,10 @@ function route(command){
 
   else if(command.startsWith('cat ')) cat(command.slice(4)); // Read file and print it's content in console
   else if(command.startsWith('add ')) add(command.slice(4)); // Create empty file in current working directory
-  else if(command.startsWith('rn ')) rn(command.slice(3)); // Rename file: rn path_to_file new_filename
-  else if(command.startsWith('cp ')) console.log(command);
-  else if(command.startsWith('mv ')) console.log(command);
-  else if(command.startsWith('rm ')) console.log(command);
+  else if(command.startsWith('rn ')) rn(command.slice(3)); // Rename file: rn path_to_file new_filename (must be in working directory)
+  else if(command.startsWith('cp ')) copy(command.slice(3)); // Copy file: cp file.txt directory\file.txt (must be in working directory)
+  else if(command.startsWith('mv ')) mv(command.slice(3)); // Move file  mv path_to_file path_to_new_directory (must be in working directory)
+  else if(command.startsWith('rm ')) del(command.slice(3)); // Delete file: rm path_to_file (must be in working directory)
 
   else if(command.startsWith('os ')) os(command.split('--')[1]);
 
