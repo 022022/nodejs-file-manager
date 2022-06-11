@@ -4,6 +4,8 @@ import { createInterface } from 'readline';
 import { parse } from 'path';
 const { stdout, stdin, argv, cwd } = process;
 
+import { help } from './help.js';
+
 import { setNewWorkingDirectory, cd, up } from './navigate.js';
 import { ls } from './ls.js';
 
@@ -44,6 +46,8 @@ process.on('exit', () => stdout.write(`Thank you for using File Manager, ${usern
 function route(command){
 
   if(command === 'exit') process.exit();
+
+  else if(command === 'help') help();
 
   else if(command === 'up') up();
   else if(command === 'ls') ls();
