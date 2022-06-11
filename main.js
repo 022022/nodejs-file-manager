@@ -26,8 +26,15 @@ import { compress, decompress } from './arch.js';
 const pathToWorkingDirectory = setNewWorkingDirectory();
 
 const args = argv.slice(2); // если не передаст???
-const username = args[0].split('=')[1];
 
+
+let username;
+
+if(!args[0]){
+  username = 'User';
+} else {
+  username = args[0].split('=')[1];
+}
 
 stdout.write(`Welcome to the File Manager, ${username}!
 You are currently in ${process.cwd()}.
