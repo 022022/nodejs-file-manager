@@ -1,51 +1,37 @@
 // npm run start -- --username=MrUser
 
 import { createInterface } from 'readline';
-import { homedir } from 'os';
 import { parse } from 'path';
 
-
+import { setNewWorkingDirectory, cd, up } from './navigate.js';
 import { ls } from './ls.js';
+
 import { cat } from './cat.js';
-import { os } from './os.js';
 import { add } from './add.js';
 import { rn } from './rn.js';
 import { copy } from './cp.js';
 import { mv } from './mv.js';
 import { del } from './del.js';
-import { cd, up } from './navigate.js';
+
+import { os } from './os.js';
+
+import { hash } from './hash.js';
+
+const { stdout, stdin, argv, cwd } = process;
 
 
 
-const { stdout, stdin, chdir, argv } = process;
-
-let pathToWorkingDirectory;
-
-export function setNewPath(path){
-  pathToWorkingDirectory = path || homedir();
-  try {
-    chdir(pathToWorkingDirectory);
-    console.log('You are currently in ' + process.cwd());
-  } catch (err) {
-    console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd());
-  }
-}
-
-setNewPath();
+const pathToWorkingDirectory = setNewWorkingDirectory();
 
 const args = argv.slice(2); // если не передаст???
 const username = args[0].split('=')[1];
 
 
-const pathToRoot = parse(homedir()).root;
-
 stdout.write(`Welcome to the File Manager, ${username} !
-You are currently in ${pathToWorkingDirectory}.
+You are currently in ${process.cwd()}.
 `);
 
 const rl = createInterface(stdin, stdout);
-// rl.setPrompt(`You are currently in ${pathToWorkingDirectory}`);
-// rl.prompt();
 
 rl.on('line', (line) => { route(line) });
 process.on('SIGINT', () => {  process.exit(); } );
@@ -70,7 +56,7 @@ function route(command){
 
   else if(command.startsWith('os ')) os(command.split('--')[1]);
 
-  else if(command.startsWith('hash ')) console.log(command);
+  else if(command.startsWith('hash ')) hash(command.slice(5)); // Calculate hash for file and print it into console  hash path_to_file
   else if(command.startsWith('compress ')) console.log(command);
   else if(command.startsWith('decompress ')) console.log(command);
 

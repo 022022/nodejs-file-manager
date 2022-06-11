@@ -1,14 +1,25 @@
 import { join } from 'path';
-import { setNewPath } from './main.js';
+import { homedir } from 'os';
 
-// current directory - process.cwd()
+
+export function setNewWorkingDirectory(path){
+  const pathToWorkingDirectory = path || homedir();
+  try {
+    process.chdir(pathToWorkingDirectory);
+    console.log('You are currently in ' + process.cwd());
+  } catch (err) {
+    console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd());
+  }
+}
+
+
 
 export async function cd(pathToFolder){
   const pathArr = pathToFolder.split('\\');
   const folder = pathArr.pop();
   const pathToWorkingDirectory = process.cwd();
   const newPath = join(pathToWorkingDirectory, folder);
-  setNewPath(newPath);
+  setNewWorkingDirectory(newPath);
 }
 
 
@@ -17,5 +28,5 @@ export async function up(){
   const pathArr = pathToWorkingDirectory.split('\\');
   pathArr.pop();
   const newPath = join(pathArr.join('\\'), '\\');
-  setNewPath(newPath);
+  setNewWorkingDirectory(newPath);
 }
