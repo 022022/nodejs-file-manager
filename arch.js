@@ -5,59 +5,89 @@ import { pipeline } from 'stream';
 
 
 
-export function compress(args){
+export async function compress(args){
 
-  const handledArgs = handleDoubleArgs(args);
+  const handledArgs = await handleDoubleArgs(args);
+
+  if(handledArgs === 'err') {
+    console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd());
+    return;
+  }
+
   const { sourceFile, destinationFile } = handledArgs;
 
   const readStream = createReadStream(sourceFile);
-  readStream.on('error', err => console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd()));
+  readStream.on('error', err => {
+    console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd());
+    return;
+  });
 
   const writeStream = createWriteStream(destinationFile);
-  writeStream.on('error', err => console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd()));
+  writeStream.on('error', err => {
+    console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd())
+  });
+
+  const compressFile = createBrotliCompress();
+  pipeline(readStream, compressFile, writeStream, ()=>{});
+  console.log('File compressed.'+'\n'+'You are currently in ' + process.cwd());
+
+}
+
+
+export async function decompress(args){
+
+  const handledArgs = await handleDoubleArgs(args);
+
+  if(handledArgs === 'err') {
+    console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd());
+  }
+
+  const { sourceFile, destinationFile } = handledArgs;
+
+  console.log(sourceFile);
 
   try{
-    const compressFile = createBrotliCompress();
+    const readStream = createReadStream(sourceFile);
+    readStream.on('error', err => console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd()));
+
+    const writeStream = createWriteStream(destinationFile);
+    writeStream.on('error', err => console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd()));
+
+    const compressFile = createBrotliDecompress();
+
     pipeline(readStream, compressFile, writeStream, ()=>{});
-    console.log('File decompressed.'+'\n'+'You are currently in ' + process.cwd());
+
+    writeStream.on('finish', () => console.log('File decompressed.'+'\n'+'You are currently in ' + process.cwd()));
+
   } catch(err) {
     console.log('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd())
   }
 }
 
 
-export function decompress(args){
 
-  const handledArgs = handleDoubleArgs(args);
-  const { sourceFile, destinationFile } = handledArgs;
+export async function handleDoubleArgs(args){
 
-  const readStream = createReadStream(sourceFile);
-  readStream.on('error', err => console.log(err+'Operation failed. ' + '\n' + 'You are currently in ' + process.cwd()));
-
-  const writeStream = createWriteStream(destinationFile);
-  writeStream.on('error', err => console.log(err+'Operation failed. ' + '\n' + 'You are currently in ' + process.cwd()));
-
-  try{
-    const compressFile = createBrotliDecompress();
-    pipeline(readStream, compressFile, writeStream, ()=>{});
-    console.log('File compressed.'+'\n'+'You are currently in ' + process.cwd());
-  } catch(err) {
-    console.log(err+'Operation failed. ' + '\n' + 'You are currently in ' + process.cwd())
+  if(!args.includes('" "')){
+    return ('err');
   }
-}
 
-
-
-export function handleDoubleArgs(args){
   const splittedArgs = args.split(' "');
-  console.log(splittedArgs);
+
   if (splittedArgs.length !== 2){
-    console.log ('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd());
-    return;
+    return ('err');
   }
+
+  const argsWithoutQuotes = splittedArgs.map(item => {
+    if (item.startsWith('"')) item = item.slice(1);
+    if (item.endsWith('"')) item = item.slice(0, item.length - 1);
+    return item;
+  });
+
   let resultObj  = {};
-  resultObj.sourceFile = splittedArgs[0].replaceAll('"', '');
-  resultObj.destinationFile = splittedArgs[1].replaceAll('"', '');
+
+  resultObj.sourceFile = argsWithoutQuotes[0];
+  resultObj.destinationFile = argsWithoutQuotes[1];
 
   return resultObj;
 }
