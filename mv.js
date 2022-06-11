@@ -5,15 +5,11 @@ import { del } from './del.js';
 
 export async function mv(args){
 
-  const splittedArgs = args.split(' ');
-
-  if (splittedArgs.length !== 2){
-    console.log ('Operation failed. ' + '\n' + 'You are currently in ' + process.cwd());
-    return;
-  }
-
   await copy(args);
-  const oldFileName = splittedArgs[0].split('\\').pop();
-  del(oldFileName);
+
+  // if has been successfully copied - no need to check args again
+  const splittedArgs = args.split('" "');
+  const oldFilePath = splittedArgs[0].slice(1);
+  del(oldFilePath);
 
 }

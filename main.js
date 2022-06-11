@@ -42,10 +42,11 @@ process.on('exit', () => stdout.write(`Thank you for using File Manager, ${usern
 
 
 function route(command){
+
   if(command === 'exit') process.exit();
 
   else if(command === 'up') up();
-  else if(command === 'ls') ls(pathToWorkingDirectory);
+  else if(command === 'ls') ls();
   else if(command.startsWith('cd ')) cd(command.slice(3), pathToWorkingDirectory);
 
   else if(command.startsWith('cat ')) cat(command.slice(4)); // Read file and print it's content in console

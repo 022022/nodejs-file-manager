@@ -13,6 +13,8 @@ export function os(arg){
 
   if (arg === 'cpus') cpusParams();
 
+  console.log('You are currently in ' + process.cwd());
+
 }
 
 function cpusParams(){ // overall amount of CPUS plus model and clock rate (in GHz - speed/1000) for each of them
@@ -22,4 +24,5 @@ function cpusParams(){ // overall amount of CPUS plus model and clock rate (in G
   cpusArr.forEach(item =>
     console.log(`model: ${item.model} clock rate: ${item.speed/1000} GHz`)
   )
+
 }

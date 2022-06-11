@@ -1,14 +1,12 @@
 import { rm } from 'fs/promises';
-import { join } from 'path';
 
-export async function del(fileToDel){
+export async function del(pathToFile){
 
-  const pathToFile = join(process.cwd(), fileToDel);
   try{
     await rm(pathToFile);
-    console.log(fileToDel + ' was removed.' + '\n' + 'You are currently in ' + process.cwd());
-  } catch {
-    console.log('Operation failed ' + '\n' + 'You are currently in ' + process.cwd());
+    console.log('File was deleted.' + '\n' + 'You are currently in ' + process.cwd());
+  } catch(err) {
+    console.log(err+'Operation failed ' + '\n' + 'You are currently in ' + process.cwd());
     return;
   }
 
